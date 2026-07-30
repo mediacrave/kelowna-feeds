@@ -70,11 +70,13 @@
 
   .side-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
 
-  .fc-row{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;padding:.5rem 0;border-bottom:1px solid var(--mist);font-size:.86rem}
-  .fc-row:last-child{border-bottom:none}
-  .fc-day{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--slate);min-width:38px}
-  .fc-desc{flex:1;color:var(--slate);font-size:.8rem}
-  .fc-temp{font-family:'IBM Plex Mono',monospace;font-size:.8rem;white-space:nowrap}
+  .forecast-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.85rem 1.1rem;margin-top:.7rem}
+  .forecast-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
+  .fc-col{display:flex;flex-direction:column;align-items:center;gap:.28rem;text-align:center;padding:.15rem .3rem}
+  .fc-col + .fc-col{border-left:1px solid var(--mist)}
+  .fc-day{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+  .fc-desc{color:var(--slate);font-size:.78rem;line-height:1.3}
+  .fc-temp{font-family:'IBM Plex Mono',monospace;font-size:.82rem;white-space:nowrap}
   .fc-temp .lo{color:var(--slate)}
 
   .refresh-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem;font-size:.75rem;color:var(--slate)}
@@ -103,12 +105,9 @@
   @media (max-width:900px){
     .layout{grid-template-columns:1fr;gap:1.2rem}
     /* Sidebar panels pair up in the width they just reclaimed. */
-    aside{display:grid;grid-template-columns:1fr 1fr;gap:0 1.2rem;align-items:start}
-    .refresh-row{grid-column:1/-1}
   }
 
   @media (max-width:640px){
-    aside{grid-template-columns:1fr}
     .masthead{padding:1.7rem 1rem 0}
     .conditions{padding:0 1rem}
     .layout{padding:0 1rem;margin:1.2rem auto;gap:1rem}
@@ -118,6 +117,12 @@
     /* Wind and humidity read better as a row than a right-aligned stack. */
     .cond-meta{margin-left:0;width:100%;text-align:left;display:flex;gap:1.1rem}
     .cond-meta br{display:none}
+    .forecast-card{padding:.75rem .6rem;margin-top:.6rem}
+    .forecast-strip{gap:.2rem}
+    .fc-col{padding:.15rem .1rem;gap:.22rem}
+    .fc-desc{display:none}
+    .fc-day{font-size:.66rem}
+    .fc-temp{font-size:.78rem}
     .river-item{padding:.85rem .95rem}
     .river-title{font-size:1rem}
     .panel-title{font-size:1.08rem}
@@ -158,6 +163,10 @@
     <div class="cond-desc" id="condDesc">Loading conditions for Kelowna…</div>
     <div class="cond-meta" id="condMeta"></div>
   </div>
+
+  <div class="forecast-card">
+    <div id="forecast"><div class="skeleton" style="width:90%"></div><div class="skeleton" style="width:60%"></div></div>
+  </div>
 </section>
 
 <main class="layout">
@@ -176,11 +185,6 @@
   </section>
 
   <aside>
-    <div class="side-panel">
-      <h2 class="panel-title">Five days</h2>
-      <div id="forecast"><div class="skeleton" style="width:90%"></div><div class="skeleton" style="width:75%"></div></div>
-    </div>
-
     <div class="side-panel">
       <h2 class="panel-title">Feed status</h2>
       <div id="diagnostics"><p class="empty-note">Checking each source…</p></div>
@@ -313,14 +317,17 @@ async function loadWeather(){
       'Wind '+Math.round(c.wind_speed_10m)+' km/h<br>Humidity '+c.relative_humidity_2m+'%';
 
     const dl=d.daily;
-    document.getElementById('forecast').innerHTML=dl.time.map((t,i)=>{
+    const cols=dl.time.map((t,i)=>{
       const day=i===0?'Today':new Date(t+'T12:00:00').toLocaleDateString(undefined,{weekday:'short'});
       const pop=dl.precipitation_probability_max[i];
-      return '<div class="fc-row"><span class="fc-day">'+day+'</span>'+
-        '<span class="fc-desc">'+(WX[dl.weather_code[i]]||'')+(pop>20?' · '+pop+'%':'')+'</span>'+
-        '<span class="fc-temp">'+Math.round(dl.temperature_2m_max[i])+'° <span class="lo">'+
-        Math.round(dl.temperature_2m_min[i])+'°</span></span></div>';
+      return '<div class="fc-col">'+
+        '<span class="fc-day">'+day+'</span>'+
+        '<span class="fc-desc">'+(WX[dl.weather_code[i]]||'')+(pop>20?'<br>'+pop+'%':'')+'</span>'+
+        '<span class="fc-temp">'+Math.round(dl.temperature_2m_max[i])+'° '+
+        '<span class="lo">'+Math.round(dl.temperature_2m_min[i])+'°</span></span>'+
+      '</div>';
     }).join('');
+    document.getElementById('forecast').innerHTML='<div class="forecast-strip">'+cols+'</div>';
   }catch(e){
     feedStatus.weather={ok:false,tried:['open-meteo: '+e.message]};
     document.getElementById('condDesc').textContent='Weather service unreachable.';
