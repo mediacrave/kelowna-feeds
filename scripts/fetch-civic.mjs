@@ -66,19 +66,47 @@ function parseItems(xml) {
   return items;
 }
 
-async function fetchFeed(url) {
+async function fetchOnce(url) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
     const res = await fetch(url, { headers: HEADERS, signal: ctrl.signal, redirect: 'follow' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const xml = await res.text();
-    const items = parseItems(xml);
-    if (!items.length) throw new Error('no <item> elements found');
+    const body = await res.text();
+    if (!res.ok) {
+      // Surface a slice of the body — a Cloudflare interstitial, a login
+      // wall and a genuine 404 all look identical from the status code alone.
+      const snippet = body.replace(/\s+/g, ' ').slice(0, 220);
+      const err = new Error(`HTTP ${res.status} ${res.statusText}`);
+      err.detail = `content-type=${res.headers.get('content-type') || 'none'} · body="${snippet}"`;
+      throw err;
+    }
+    const items = parseItems(body);
+    if (!items.length) {
+      const err = new Error('no <item> elements found');
+      err.detail = `content-type=${res.headers.get('content-type') || 'none'} · ` +
+                   `${body.length} bytes · starts "${body.replace(/\s+/g, ' ').slice(0, 220)}"`;
+      throw err;
+    }
     return items;
   } finally {
     clearTimeout(timer);
   }
+}
+
+/** Three attempts with backoff — WAFs often wave through a retry. */
+async function fetchFeed(url) {
+  let last;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      return await fetchOnce(url);
+    } catch (err) {
+      last = err;
+      if (attempt < 3) {
+        await new Promise((r) => setTimeout(r, attempt * 3000));
+      }
+    }
+  }
+  throw last;
 }
 
 async function loadPrevious() {
@@ -112,6 +140,7 @@ for (const feed of FEEDS) {
     items.push(...carried);
     console.log(`FAIL  ${feed.tag.padEnd(9)} ${err.message}` +
                 (carried.length ? ` — carried ${carried.length} from last run` : ''));
+    if (err.detail) console.log(`      ${err.detail}`);
   }
 }
 
