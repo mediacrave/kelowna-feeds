@@ -15,6 +15,7 @@
     --gold:#B07C22; --gold-soft:#FBF0DD;
     --plum:#7A3350; --plum-soft:#F5E7ED;
     --sage:#4C7457; --sage-soft:#E9F1E7;
+    --azure:#2E5C8A; --azure-soft:#E5EDF6;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -26,9 +27,8 @@
   .wordmark{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:-.01em;line-height:1;margin:0}
   .wordmark .thin{font-weight:400;opacity:.55;font-style:normal}
   .dateline{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);text-align:right}
-  .tagline{font-size:.92rem;color:var(--slate);margin:.2rem 0 1.1rem;font-style:italic;font-family:'Newsreader',Georgia,serif}
 
-  .waterline{width:100%;height:20px;display:block;overflow:visible}
+  .waterline{width:100%;height:20px;display:block;overflow:visible;margin-top:1.1rem}
   .waterline path{fill:none;stroke:var(--teal);stroke-width:1.4;opacity:.55;stroke-dasharray:6 5;animation:drift 6s linear infinite}
   .waterline path.p2{stroke:var(--gold);opacity:.4;animation-duration:9s;animation-direction:reverse}
   @keyframes drift{to{stroke-dashoffset:-220}}
@@ -59,14 +59,20 @@
   .pill.castanet{background:var(--teal-soft);color:var(--teal)}
   .pill.kelownanow{background:var(--gold-soft);color:var(--gold)}
   .pill.globalnews{background:var(--plum-soft);color:var(--plum)}
+  .pill.capnews{background:var(--azure-soft);color:var(--azure)}
   .region{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--sage);background:var(--sage-soft);padding:.18rem .45rem;border-radius:5px}
   .river-time{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--slate)}
   .river-title{font-size:.98rem;line-height:1.35;font-weight:500}
 
   .side-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
+
   .civic-item{display:block;padding:.6rem 0;border-bottom:1px solid var(--mist);text-decoration:none;font-size:.88rem;line-height:1.35}
   .civic-item:last-child{border-bottom:none}
-  .civic-item .river-time{display:block;margin-bottom:.15rem}
+  .civic-head{display:flex;align-items:center;gap:.45rem;margin-bottom:.2rem}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;padding:.12rem .4rem;border-radius:4px;background:var(--mist);color:var(--slate)}
+  .tag.news{background:var(--teal-soft);color:var(--teal)}
+  .tag.projects{background:var(--gold-soft);color:var(--gold)}
+  .tag.events{background:var(--sage-soft);color:var(--sage)}
 
   .fc-row{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;padding:.5rem 0;border-bottom:1px solid var(--mist);font-size:.86rem}
   .fc-row:last-child{border-bottom:none}
@@ -102,7 +108,6 @@
     <h1 class="wordmark">Kelowna <span class="thin">Daily</span></h1>
     <div class="dateline" id="dateline">—</div>
   </div>
-  <p class="tagline">Lake-side, on the record — Castanet, KelownaNow, Global News &amp; City Hall, in one morning pour.</p>
   <svg class="waterline" viewBox="0 0 1180 20" preserveAspectRatio="none" aria-hidden="true">
     <path class="p1" d="M0,10 Q20,2 40,10 T80,10 T120,10 T160,10 T200,10 T240,10 T280,10 T320,10 T360,10 T400,10 T440,10 T480,10 T520,10 T560,10 T600,10 T640,10 T680,10 T720,10 T760,10 T800,10 T840,10 T880,10 T920,10 T960,10 T1000,10 T1040,10 T1080,10 T1120,10 T1160,10 T1200,10"/>
     <path class="p2" d="M0,13 Q20,6 40,13 T80,13 T120,13 T160,13 T200,13 T240,13 T280,13 T320,13 T360,13 T400,13 T440,13 T480,13 T520,13 T560,13 T600,13 T640,13 T680,13 T720,13 T760,13 T800,13 T840,13 T880,13 T920,13 T960,13 T1000,13 T1040,13 T1080,13 T1120,13 T1160,13 T1200,13"/>
@@ -165,11 +170,17 @@
    human-readable directories, not feeds — hence the deeper paths. */
 const FEEDS = [
   { key:'castanet',   label:'Castanet',            pill:'castanet',   url:'https://www.castanet.net/rss/mostrecent.xml' },
-  { key:'kelownanow', label:'KelownaNow',          pill:'kelownanow', url:'https://www.kelownanow.com/api/rss/88' },
-  { key:'globalnews', label:'Global News Okanagan',pill:'globalnews', url:'https://globalnews.ca/okanagan/feed/' }
+  { key:'kelownanow', label:'KelownaNow',          pill:'kelownanow', url:'https://www.kelownanow.com/api/rss/128' },
+  { key:'globalnews', label:'Global News Okanagan',pill:'globalnews', url:'https://globalnews.ca/okanagan/feed/' },
+  { key:'capnews',    label:'Capital News',        pill:'capnews',    url:'https://kelownacapnews.com/feed' }
 ];
-const CIVIC = { key:'civic', label:'City of Kelowna', url:'https://www.kelowna.ca/rss/news.xml' };
 
+/* City of Kelowna publishes one feed per topic; they share a sidebar panel. */
+const CIVIC_FEEDS = [
+  { key:'civicNews',     tag:'News',     url:'https://www.kelowna.ca/rss/news.xml' },
+  { key:'civicProjects', tag:'Projects', url:'https://www.kelowna.ca/rss/cityprojects.xml' },
+  { key:'civicEvents',   tag:'Events',   url:'https://www.kelowna.ca/rss/events.xml' }
+];
 const KELOWNA = { lat:49.888, lon:-119.496 };
 
 /* Castanet is a Thompson-Okanagan-wide wire; it suffixes each headline
@@ -312,13 +323,15 @@ function renderRiver(){
 
 function renderCivic(items){
   const el=document.getElementById('civic');
-  if(!items.length){ el.innerHTML='<p class="empty-note">No releases retrieved.</p>'; return; }
-  el.innerHTML=items.slice(0,8).map(i=>
+  if(!items.length){ el.innerHTML='<p class="empty-note">City feeds did not respond.</p>'; return; }
+  el.innerHTML=items.slice(0,10).map(i=>
     '<a class="civic-item" href="'+i.link+'" target="_blank" rel="noopener">'+
-    '<span class="river-time">'+relTime(i.pubDate)+'</span>'+i.title+'</a>').join('');
+      '<div class="civic-head"><span class="tag '+i.tag.toLowerCase()+'">'+i.tag+'</span>'+
+      '<span class="river-time">'+relTime(i.pubDate)+'</span></div>'+i.title+'</a>').join('');
 }
 
-const DIAG_LABELS={castanet:'Castanet',kelownanow:'KelownaNow',globalnews:'Global News Okanagan',civic:'City of Kelowna',weather:'Open-Meteo'};
+const DIAG_LABELS={castanet:'Castanet',kelownanow:'KelownaNow',globalnews:'Global News Okanagan',
+  capnews:'Capital News',civicNews:'City · News',civicProjects:'City · Projects',civicEvents:'City · Events',weather:'Open-Meteo'};
 function renderDiagnostics(){
   document.getElementById('diagnostics').innerHTML=Object.keys(DIAG_LABELS).map(k=>{
     const s=feedStatus[k]; if(!s) return '';
@@ -334,7 +347,7 @@ async function loadAll(){
   btn.textContent='Loading…'; btn.disabled=true;
 
   const newsResults=await Promise.all(FEEDS.map(f=>fetchFeed(f.url,f.key)));
-  const civicItems=await fetchFeed(CIVIC.url,CIVIC.key);
+  const civicResults=await Promise.all(CIVIC_FEEDS.map(f=>fetchFeed(f.url,f.key)));
   await loadWeather();
 
   allItems=[];
@@ -357,14 +370,20 @@ async function loadAll(){
   allItems.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
 
   renderRiver();
+
+  const civicItems=[];
+  civicResults.forEach((items,idx)=>{
+    items.forEach(i=>civicItems.push({...i,tag:CIVIC_FEEDS[idx].tag}));
+  });
   civicItems.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
   renderCivic(civicItems);
+
   renderDiagnostics();
 
   const bad=Object.values(feedStatus).filter(s=>!s.ok).length;
   document.getElementById('lastUpdated').textContent=
     'Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+
-    (bad?' · '+bad+' of 5 unreachable':' · all sources live');
+    (bad?' · '+bad+' of 8 unreachable':' · all sources live');
 
   btn.textContent='Refresh'; btn.disabled=false;
 }
