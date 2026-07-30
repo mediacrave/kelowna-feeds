@@ -48,9 +48,35 @@
   .panel-title{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:1.15rem;margin:0 0 .9rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
   .panel-title .count{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--slate);font-weight:400}
 
-  .filter-bar{display:flex;gap:.4rem;margin-bottom:.9rem}
+  .filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin-bottom:.9rem}
+  .filter-group{display:flex;flex-wrap:wrap;gap:.4rem}
+  .filter-sep{width:1px;align-self:stretch;min-height:24px;background:var(--border);margin:0 .35rem}
   .filter-btn{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.03em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--slate);border-radius:6px;padding:.35rem .7rem;cursor:pointer}
   .filter-btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .dropdown{position:relative;display:inline-block}
+  .dd-toggle{display:inline-flex;align-items:center;gap:.45rem}
+  .dd-caret{font-size:.6rem;line-height:1;opacity:.7;transition:transform .15s}
+  .dd-toggle[aria-expanded="true"] .dd-caret{transform:rotate(180deg)}
+  .dd-menu{position:absolute;top:calc(100% + .35rem);left:0;z-index:30;background:var(--surface);
+    border:1px solid var(--border);border-radius:9px;padding:.35rem;
+    min-width:200px;max-width:min(280px,calc(100vw - 2rem));
+    box-shadow:0 8px 24px rgba(15,46,56,.12)}
+  .dd-menu[hidden]{display:none}
+  .dd-item{display:flex;align-items:center;gap:.55rem;width:100%;padding:.5rem .55rem;border:none;
+    background:transparent;border-radius:6px;cursor:pointer;text-align:left;
+    font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;color:var(--ink)}
+  .dd-item:hover{background:var(--mist)}
+  .dd-sep{height:1px;background:var(--mist);margin:.3rem .25rem}
+  .dd-box{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border);
+    flex:none;display:grid;place-items:center}
+  .dd-item[aria-checked="true"] .dd-box{background:var(--ink);border-color:var(--ink)}
+  .dd-item[aria-checked="true"] .dd-box::after{content:"";width:4px;height:8px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+  .dd-dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .dd-dot.castanet{background:var(--teal)}
+  .dd-dot.kelownanow{background:var(--gold)}
+  .dd-dot.capnews{background:var(--azure)}
+  .dd-dot.globalnews{background:var(--plum)}
 
   .river-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.95rem 1.1rem;margin-bottom:.7rem;display:block;text-decoration:none;transition:border-color .15s,transform .15s}
   @media (hover:hover){
@@ -137,7 +163,9 @@
     .waterline{margin-top:.85rem}
     .cond-temp{font-size:1.85rem}
     .river-top{gap:.35rem}
-    .filter-bar{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+    .filter-sep{display:none}
+    .filter-group{width:100%}
+    .filter-group .filter-btn{flex:1 1 auto}
   }
 </style>
 </head>
@@ -173,8 +201,17 @@
   <section>
     <h2 class="panel-title">The River <span class="count" id="riverCount"></span></h2>
     <div class="filter-bar">
-      <button class="filter-btn" id="fLocal" aria-pressed="true">Central Okanagan</button>
-      <button class="filter-btn" id="fAll" aria-pressed="false">Everything</button>
+      <div class="filter-group" role="group" aria-label="Region">
+        <button class="filter-btn" id="fLocal" aria-pressed="true">Central Okanagan</button>
+        <button class="filter-btn" id="fAll" aria-pressed="false">Everything</button>
+      </div>
+      <span class="filter-sep" aria-hidden="true"></span>
+      <div class="dropdown" id="sourceFilter">
+        <button class="filter-btn dd-toggle" id="srcToggle" aria-haspopup="true" aria-expanded="false">
+          <span id="srcLabel">All sources</span><span class="dd-caret" aria-hidden="true">▼</span>
+        </button>
+        <div class="dd-menu" id="srcMenu" role="menu" aria-label="Filter sources" hidden></div>
+      </div>
     </div>
     <div id="river">
       <div class="skeleton" style="width:92%"></div>
@@ -203,10 +240,10 @@
    The /rss/ landing pages on castanet.net and kelownanow.com are
    human-readable directories, not feeds — hence the deeper paths. */
 const FEEDS = [
-  { key:'castanet',   label:'Castanet',            pill:'castanet',   url:'https://www.castanet.net/rss/mostrecent.xml' },
-  { key:'kelownanow', label:'KelownaNow',          pill:'kelownanow', url:'https://www.kelownanow.com/api/rss/128' },
-  { key:'globalnews', label:'Global News Okanagan',pill:'globalnews', url:'https://globalnews.ca/okanagan/feed/' },
-  { key:'capnews',    label:'Capital News',        pill:'capnews',    url:'https://kelownacapnews.com/feed' }
+  { key:'castanet',   label:'Castanet',            pill:'castanet',   short:'Castanet',   url:'https://www.castanet.net/rss/mostrecent.xml' },
+  { key:'kelownanow', label:'KelownaNow',          pill:'kelownanow', short:'KelownaNow', url:'https://www.kelownanow.com/api/rss/128' },
+  { key:'globalnews', label:'Global News Okanagan',pill:'globalnews', short:'Global',     url:'https://globalnews.ca/okanagan/feed/' },
+  { key:'capnews',    label:'Capital News',        pill:'capnews',    short:'Cap News',   url:'https://kelownacapnews.com/feed' }
 ];
 const KELOWNA = { lat:49.888, lon:-119.496 };
 
@@ -217,6 +254,7 @@ const LOCAL_REGIONS = ['kelowna','west kelowna','lake country','peachland','okan
 const feedStatus = {};
 let allItems = [];
 let localOnly = true;
+const activeSources = new Set(FEEDS.map(f => f.key));
 
 function stripHtml(s){ if(!s) return ''; const d=document.createElement('div'); d.innerHTML=s; return (d.textContent||'').trim(); }
 
@@ -337,10 +375,12 @@ async function loadWeather(){
 
 function renderRiver(){
   const el=document.getElementById('river');
-  const items=localOnly?allItems.filter(i=>i.isLocal):allItems;
+  const items=allItems.filter(i=>activeSources.has(i.key)&&(!localOnly||i.isLocal));
   document.getElementById('riverCount').textContent=items.length+' headlines';
   if(!items.length){
-    el.innerHTML='<p class="empty-note">Nothing to show. Try Everything, or refresh.</p>';
+    el.innerHTML= activeSources.size===0
+      ? '<p class="empty-note">No sources selected — pick one above, or tap All.</p>'
+      : '<p class="empty-note">Nothing matches. Try Everything, or another source.</p>';
     return;
   }
   el.innerHTML=items.slice(0,40).map(i=>
@@ -380,7 +420,7 @@ async function loadAll(){
       const hay=((region||'')+' '+title).toLowerCase();
       allItems.push({
         ...i, title, region,
-        source:f.label, pill:f.pill,
+        key:f.key, source:f.label, pill:f.pill,
         // Feeds that are already local-only always count as local.
         isLocal: f.key!=='castanet' || LOCAL_REGIONS.some(r=>hay.includes(r))
       });
@@ -400,6 +440,70 @@ async function loadAll(){
   btn.textContent='Refresh'; btn.disabled=false;
 }
 
+function buildSourceFilter(){
+  const menu=document.getElementById('srcMenu');
+  const toggle=document.getElementById('srcToggle');
+
+  menu.innerHTML=
+    '<button class="dd-item" role="menuitemcheckbox" data-src="all"><span class="dd-box"></span>All sources</button>'+
+    '<div class="dd-sep"></div>'+
+    FEEDS.map(f=>'<button class="dd-item" role="menuitemcheckbox" data-src="'+f.key+'">'+
+      '<span class="dd-box"></span><span class="dd-dot '+f.key+'"></span>'+
+      (f.short||f.label)+'</button>').join('');
+
+  // Toggling stays inside the menu — picking several sources shouldn't
+  // mean reopening it four times.
+  menu.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-src]');
+    if(!b) return;
+    const k=b.dataset.src;
+    if(k==='all'){
+      if(activeSources.size===FEEDS.length) activeSources.clear();
+      else FEEDS.forEach(f=>activeSources.add(f.key));
+    } else if(activeSources.has(k)) activeSources.delete(k);
+    else activeSources.add(k);
+    syncSourceButtons();
+    renderRiver();
+  });
+
+  toggle.addEventListener('click',e=>{
+    e.stopPropagation();
+    setMenuOpen(menu.hidden);
+  });
+
+  document.addEventListener('click',e=>{
+    if(!menu.hidden && !e.target.closest('#sourceFilter')) setMenuOpen(false);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && !menu.hidden){ setMenuOpen(false); toggle.focus(); }
+  });
+
+  syncSourceButtons();
+}
+
+function setMenuOpen(open){
+  document.getElementById('srcMenu').hidden=!open;
+  document.getElementById('srcToggle').setAttribute('aria-expanded',String(open));
+}
+
+function syncSourceButtons(){
+  const n=activeSources.size, total=FEEDS.length;
+  document.querySelectorAll('#srcMenu button[data-src]').forEach(b=>{
+    const k=b.dataset.src;
+    b.setAttribute('aria-checked',String(k==='all' ? n===total : activeSources.has(k)));
+  });
+
+  let label;
+  if(n===total) label='All sources';
+  else if(n===0) label='No sources';
+  else if(n===1) label=(FEEDS.find(f=>activeSources.has(f.key))||{}).short||'1 source';
+  else label=n+' sources';
+  document.getElementById('srcLabel').textContent=label;
+
+  // Highlight the toggle whenever the view is narrowed.
+  document.getElementById('srcToggle').setAttribute('aria-pressed',String(n!==total));
+}
+
 function setFilter(local){
   localOnly=local;
   document.getElementById('fLocal').setAttribute('aria-pressed',String(local));
@@ -415,6 +519,7 @@ function updateDateline(){
 document.getElementById('fLocal').addEventListener('click',()=>setFilter(true));
 document.getElementById('fAll').addEventListener('click',()=>setFilter(false));
 document.getElementById('refreshBtn').addEventListener('click',loadAll);
+buildSourceFilter();
 updateDateline();
 loadAll();
 setInterval(loadAll,30*60*1000);
