@@ -9,280 +9,90 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #EFF3F1;
-    --mist: #E3EAE7;
-    --surface: #FFFFFF;
-    --border: #DCE4E1;
-    --ink: #0F2E38;
-    --slate: #5C6F72;
-    --teal: #1C6E7A;
-    --teal-soft: #E4F0F1;
-    --gold: #C98A2B;
-    --gold-soft: #FBF0DD;
-    --plum: #7A3350;
-    --plum-soft: #F5E7ED;
-    --sage: #4C7457;
-    --sage-soft: #E9F1E7;
+    --bg:#EFF3F1; --mist:#E3EAE7; --surface:#FFFFFF; --border:#DCE4E1;
+    --ink:#0F2E38; --slate:#5C6F72;
+    --teal:#1C6E7A; --teal-soft:#E4F0F1;
+    --gold:#B07C22; --gold-soft:#FBF0DD;
+    --plum:#7A3350; --plum-soft:#F5E7ED;
+    --sage:#4C7457; --sage-soft:#E9F1E7;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'IBM Plex Sans', sans-serif;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-  a{color:inherit;}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
 
-  /* ---------- Masthead ---------- */
-  .masthead{
-    padding:2.4rem 1.5rem 0;
-    max-width:1180px;
-    margin:0 auto;
-  }
-  .masthead-row{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:.5rem;
-  }
-  .wordmark{
-    font-family:'Newsreader', serif;
-    font-style:italic;
-    font-weight:500;
-    font-size:clamp(2.4rem, 5vw, 3.6rem);
-    letter-spacing:-0.01em;
-    line-height:1;
-    margin:0;
-  }
-  .wordmark .thin{ font-weight:400; opacity:.55; font-style:normal; }
-  .dateline{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:.78rem;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    color:var(--slate);
-    text-align:right;
-  }
-  .tagline{
-    font-size:.92rem;
-    color:var(--slate);
-    margin:.2rem 0 1.1rem;
-    font-style:italic;
-    font-family:'Newsreader', serif;
-  }
+  .masthead{padding:2.4rem 1.5rem 0;max-width:1180px;margin:0 auto}
+  .masthead-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+  .wordmark{font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(2.4rem,5vw,3.6rem);letter-spacing:-.01em;line-height:1;margin:0}
+  .wordmark .thin{font-weight:400;opacity:.55;font-style:normal}
+  .dateline{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);text-align:right}
+  .tagline{font-size:.92rem;color:var(--slate);margin:.2rem 0 1.1rem;font-style:italic;font-family:'Newsreader',Georgia,serif}
 
-  /* waterline divider — signature element */
-  .waterline{ width:100%; height:20px; display:block; overflow:visible; }
-  .waterline path{
-    fill:none;
-    stroke:var(--teal);
-    stroke-width:1.4;
-    opacity:.55;
-    stroke-dasharray:6 5;
-    animation:drift 6s linear infinite;
-  }
-  .waterline path.p2{ stroke:var(--gold); opacity:.4; animation-duration:9s; animation-direction:reverse; }
-  @keyframes drift{ to{ stroke-dashoffset:-220; } }
-  @media (prefers-reduced-motion: reduce){ .waterline path{ animation:none; } }
+  .waterline{width:100%;height:20px;display:block;overflow:visible}
+  .waterline path{fill:none;stroke:var(--teal);stroke-width:1.4;opacity:.55;stroke-dasharray:6 5;animation:drift 6s linear infinite}
+  .waterline path.p2{stroke:var(--gold);opacity:.4;animation-duration:9s;animation-direction:reverse}
+  @keyframes drift{to{stroke-dashoffset:-220}}
+  @media (prefers-reduced-motion:reduce){.waterline path{animation:none}}
 
-  /* ---------- Conditions strip ---------- */
-  .conditions{
-    max-width:1180px;
-    margin:1.1rem auto 0;
-    padding:0 1.5rem;
-  }
-  .cond-card{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:1rem 1.3rem;
-    display:flex;
-    align-items:center;
-    gap:1.6rem;
-    flex-wrap:wrap;
-  }
-  .cond-now{ display:flex; align-items:baseline; gap:.6rem; }
-  .cond-temp{ font-family:'Newsreader', serif; font-size:2.1rem; font-weight:500; }
-  .cond-desc{ color:var(--slate); font-size:.92rem; max-width:520px; }
-  .cond-label{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--teal); margin-right:.2rem;
-  }
-  .alert-pill{
-    margin-left:auto;
-    background:var(--plum-soft);
-    color:var(--plum);
-    border:1px solid var(--plum);
-    border-radius:999px;
-    padding:.35rem .85rem;
-    font-size:.78rem;
-    font-weight:500;
-    display:flex;
-    align-items:center;
-    gap:.4rem;
-  }
-  .alert-pill::before{ content:"●"; font-size:.6rem; }
+  .conditions{max-width:1180px;margin:1.1rem auto 0;padding:0 1.5rem}
+  .cond-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.3rem;display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap}
+  .cond-now{display:flex;align-items:baseline;gap:.55rem}
+  .cond-temp{font-family:'Newsreader',Georgia,serif;font-size:2.1rem;font-weight:500}
+  .cond-desc{color:var(--slate);font-size:.92rem}
+  .cond-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+  .cond-meta{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--slate);text-align:right;line-height:1.6}
 
-  /* ---------- Layout ---------- */
-  .layout{
-    max-width:1180px;
-    margin:1.6rem auto 3rem;
-    padding:0 1.5rem;
-    display:grid;
-    grid-template-columns:1.7fr 1fr;
-    gap:1.6rem;
-  }
-  @media (max-width:860px){ .layout{ grid-template-columns:1fr; } }
+  .layout{max-width:1180px;margin:1.6rem auto 3rem;padding:0 1.5rem;display:grid;grid-template-columns:1.7fr 1fr;gap:1.6rem}
+  @media (max-width:860px){.layout{grid-template-columns:1fr}}
 
-  .panel-title{
-    font-family:'Newsreader', serif;
-    font-weight:500;
-    font-size:1.15rem;
-    margin:0 0 .9rem;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-  .panel-title .count{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:.68rem;
-    color:var(--slate);
-    font-weight:400;
-  }
+  .panel-title{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:1.15rem;margin:0 0 .9rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .panel-title .count{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--slate);font-weight:400}
 
-  /* River (main news feed) */
-  .river-item{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:.95rem 1.1rem;
-    margin-bottom:.7rem;
-    display:block;
-    text-decoration:none;
-    transition:border-color .15s ease, transform .15s ease;
-  }
-  .river-item:hover{ border-color:var(--teal); transform:translateX(2px); }
-  .river-top{
-    display:flex;
-    align-items:center;
-    gap:.55rem;
-    margin-bottom:.35rem;
-    flex-wrap:wrap;
-  }
-  .pill{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:.66rem;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    padding:.18rem .5rem;
-    border-radius:5px;
-    font-weight:500;
-  }
-  .pill.castanet{ background:var(--teal-soft); color:var(--teal); }
-  .pill.kelownanow{ background:var(--gold-soft); color:var(--gold); }
-  .pill.globalnews{ background:var(--plum-soft); color:var(--plum); }
-  .river-time{ font-family:'IBM Plex Mono', monospace; font-size:.7rem; color:var(--slate); }
-  .river-title{
-    font-size:.98rem;
-    line-height:1.35;
-    font-weight:500;
-  }
+  .filter-bar{display:flex;gap:.4rem;margin-bottom:.9rem}
+  .filter-btn{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.03em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--slate);border-radius:6px;padding:.35rem .7rem;cursor:pointer}
+  .filter-btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 
-  /* Sidebar */
-  .side-panel{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:1.1rem 1.2rem;
-    margin-bottom:1.2rem;
-  }
-  .civic-item{
-    display:block;
-    padding:.6rem 0;
-    border-bottom:1px solid var(--mist);
-    text-decoration:none;
-    font-size:.88rem;
-    line-height:1.35;
-  }
-  .civic-item:last-child{ border-bottom:none; }
-  .civic-item .river-time{ display:block; margin-bottom:.15rem; }
+  .river-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.95rem 1.1rem;margin-bottom:.7rem;display:block;text-decoration:none;transition:border-color .15s,transform .15s}
+  .river-item:hover{border-color:var(--teal);transform:translateX(2px)}
+  .river-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;flex-wrap:wrap}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:.18rem .5rem;border-radius:5px;font-weight:500}
+  .pill.castanet{background:var(--teal-soft);color:var(--teal)}
+  .pill.kelownanow{background:var(--gold-soft);color:var(--gold)}
+  .pill.globalnews{background:var(--plum-soft);color:var(--plum)}
+  .region{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--sage);background:var(--sage-soft);padding:.18rem .45rem;border-radius:5px}
+  .river-time{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--slate)}
+  .river-title{font-size:.98rem;line-height:1.35;font-weight:500}
 
-  .forecast-row{
-    display:flex;
-    justify-content:space-between;
-    gap:.8rem;
-    padding:.55rem 0;
-    border-bottom:1px solid var(--mist);
-    font-size:.86rem;
-  }
-  .forecast-row:last-child{ border-bottom:none; }
-  .forecast-period{ color:var(--slate); font-family:'IBM Plex Mono', monospace; font-size:.72rem; padding-top:.1rem; min-width:78px; }
-  .forecast-text{ flex:1; }
+  .side-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
+  .civic-item{display:block;padding:.6rem 0;border-bottom:1px solid var(--mist);text-decoration:none;font-size:.88rem;line-height:1.35}
+  .civic-item:last-child{border-bottom:none}
+  .civic-item .river-time{display:block;margin-bottom:.15rem}
 
-  .refresh-row{
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:.75rem; color:var(--slate); margin-top:.4rem;
-  }
-  button.refresh{
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:.78rem;
-    font-weight:500;
-    background:var(--ink);
-    color:#fff;
-    border:none;
-    border-radius:7px;
-    padding:.45rem .9rem;
-    cursor:pointer;
-  }
-  button.refresh:hover{ background:var(--teal); }
-  button.refresh:focus-visible, a:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; }
+  .fc-row{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;padding:.5rem 0;border-bottom:1px solid var(--mist);font-size:.86rem}
+  .fc-row:last-child{border-bottom:none}
+  .fc-day{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--slate);min-width:38px}
+  .fc-desc{flex:1;color:var(--slate);font-size:.8rem}
+  .fc-temp{font-family:'IBM Plex Mono',monospace;font-size:.8rem;white-space:nowrap}
+  .fc-temp .lo{color:var(--slate)}
 
-  .skeleton{
-    height:16px; border-radius:5px;
-    background:linear-gradient(90deg, var(--mist) 25%, #EFF6F4 37%, var(--mist) 63%);
-    background-size:400% 100%;
-    animation:shimmer 1.4s ease infinite;
-    margin-bottom:.5rem;
-  }
-  @keyframes shimmer{ 0%{background-position:100% 0;} 100%{background-position:0 0;} }
+  .refresh-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem;font-size:.75rem;color:var(--slate)}
+  button.refresh{font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;font-weight:500;background:var(--ink);color:#fff;border:none;border-radius:7px;padding:.45rem .9rem;cursor:pointer}
+  button.refresh:hover{background:var(--teal)}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 
-  .empty-note{ color:var(--slate); font-size:.85rem; font-style:italic; }
+  .skeleton{height:16px;border-radius:5px;background:linear-gradient(90deg,var(--mist) 25%,#EFF6F4 37%,var(--mist) 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;margin-bottom:.5rem}
+  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+  @media (prefers-reduced-motion:reduce){.skeleton{animation:none}}
 
-  .diag-row{
-    display:grid;
-    grid-template-columns:auto 1fr;
-    gap:.15rem .55rem;
-    padding:.45rem 0;
-    border-bottom:1px solid var(--mist);
-    align-items:start;
-  }
-  .diag-row:last-of-type{ border-bottom:none; }
-  .dot{ width:7px; height:7px; border-radius:50%; display:block; margin-top:.42rem; }
-  .dot.ok{ background:var(--sage); }
-  .dot.bad{ background:var(--plum); }
-  .diag-name{ font-size:.85rem; font-weight:500; }
-  .diag-detail{
-    grid-column:2;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:.68rem;
-    color:var(--slate);
-    line-height:1.45;
-    word-break:break-word;
-  }
-  .diag-hint{
-    margin:.8rem 0 0;
-    padding:.7rem .8rem;
-    background:var(--gold-soft);
-    border-left:2px solid var(--gold);
-    border-radius:0 6px 6px 0;
-    font-size:.8rem;
-    line-height:1.5;
-    color:var(--ink);
-  }
+  .empty-note{color:var(--slate);font-size:.85rem;font-style:italic}
+
+  .diag-row{display:grid;grid-template-columns:auto 1fr;gap:.15rem .55rem;padding:.45rem 0;border-bottom:1px solid var(--mist);align-items:start}
+  .diag-row:last-of-type{border-bottom:none}
+  .dot{width:7px;height:7px;border-radius:50%;display:block;margin-top:.42rem}
+  .dot.ok{background:var(--sage)}
+  .dot.bad{background:var(--plum)}
+  .diag-name{font-size:.85rem;font-weight:500}
+  .diag-detail{grid-column:2;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--slate);line-height:1.45;word-break:break-word}
 </style>
 </head>
 <body>
@@ -293,25 +103,30 @@
     <div class="dateline" id="dateline">—</div>
   </div>
   <p class="tagline">Lake-side, on the record — Castanet, KelownaNow, Global News &amp; City Hall, in one morning pour.</p>
-  <svg class="waterline" viewBox="0 0 1180 20" preserveAspectRatio="none">
+  <svg class="waterline" viewBox="0 0 1180 20" preserveAspectRatio="none" aria-hidden="true">
     <path class="p1" d="M0,10 Q20,2 40,10 T80,10 T120,10 T160,10 T200,10 T240,10 T280,10 T320,10 T360,10 T400,10 T440,10 T480,10 T520,10 T560,10 T600,10 T640,10 T680,10 T720,10 T760,10 T800,10 T840,10 T880,10 T920,10 T960,10 T1000,10 T1040,10 T1080,10 T1120,10 T1160,10 T1200,10"/>
     <path class="p2" d="M0,13 Q20,6 40,13 T80,13 T120,13 T160,13 T200,13 T240,13 T280,13 T320,13 T360,13 T400,13 T440,13 T480,13 T520,13 T560,13 T600,13 T640,13 T680,13 T720,13 T760,13 T800,13 T840,13 T880,13 T920,13 T960,13 T1000,13 T1040,13 T1080,13 T1120,13 T1160,13 T1200,13"/>
   </svg>
 </header>
 
 <section class="conditions">
-  <div class="cond-card" id="condCard">
+  <div class="cond-card">
     <div class="cond-now">
       <span class="cond-label">Now</span>
       <span class="cond-temp" id="condTemp">—</span>
     </div>
-    <div class="cond-desc" id="condDesc">Loading Environment Canada conditions for Kelowna…</div>
+    <div class="cond-desc" id="condDesc">Loading conditions for Kelowna…</div>
+    <div class="cond-meta" id="condMeta"></div>
   </div>
 </section>
 
 <main class="layout">
   <section>
     <h2 class="panel-title">The River <span class="count" id="riverCount"></span></h2>
+    <div class="filter-bar">
+      <button class="filter-btn" id="fLocal" aria-pressed="true">Central Okanagan</button>
+      <button class="filter-btn" id="fAll" aria-pressed="false">Everything</button>
+    </div>
     <div id="river">
       <div class="skeleton" style="width:92%"></div>
       <div class="skeleton" style="width:78%"></div>
@@ -323,18 +138,12 @@
   <aside>
     <div class="side-panel">
       <h2 class="panel-title">City Hall</h2>
-      <div id="civic">
-        <div class="skeleton" style="width:95%"></div>
-        <div class="skeleton" style="width:80%"></div>
-      </div>
+      <div id="civic"><div class="skeleton" style="width:95%"></div><div class="skeleton" style="width:80%"></div></div>
     </div>
 
     <div class="side-panel">
-      <h2 class="panel-title">Conditions detail</h2>
-      <div id="forecast">
-        <div class="skeleton" style="width:90%"></div>
-        <div class="skeleton" style="width:75%"></div>
-      </div>
+      <h2 class="panel-title">Five days</h2>
+      <div id="forecast"><div class="skeleton" style="width:90%"></div><div class="skeleton" style="width:75%"></div></div>
     </div>
 
     <div class="side-panel">
@@ -350,279 +159,235 @@
 </main>
 
 <script>
-const FEEDS = {
-  castanet:   { url: 'https://www.castanet.net/rss/',            label: 'Castanet',    pill: 'castanet' },
-  kelownanow: { url: 'https://www.kelownanow.com/rss',            label: 'KelownaNow',  pill: 'kelownanow' },
-  globalnews: { url: 'https://globalnews.ca/okanagan/feed/',      label: 'Global News', pill: 'globalnews' },
-  civic:      { url: 'https://www.kelowna.ca/rss/news.xml',       label: 'City of Kelowna' },
-  weather:    { url: 'https://weather.gc.ca/rss/city/bc-48_e.xml', label: 'Environment Canada' }
-};
+/* ---------------- Sources ----------------
+   Every URL below has been confirmed to return actual XML.
+   The /rss/ landing pages on castanet.net and kelownanow.com are
+   human-readable directories, not feeds — hence the deeper paths. */
+const FEEDS = [
+  { key:'castanet',   label:'Castanet',            pill:'castanet',   url:'https://www.castanet.net/rss/mostrecent.xml' },
+  { key:'kelownanow', label:'KelownaNow',          pill:'kelownanow', url:'https://www.kelownanow.com/api/rss/88' },
+  { key:'globalnews', label:'Global News Okanagan',pill:'globalnews', url:'https://globalnews.ca/okanagan/feed/' }
+];
+const CIVIC = { key:'civic', label:'City of Kelowna', url:'https://www.kelowna.ca/rss/news.xml' };
 
-function stripHtml(str){
-  if(!str) return '';
-  const d = document.createElement('div');
-  d.innerHTML = str;
-  return (d.textContent || d.innerText || '').trim();
-}
+const KELOWNA = { lat:49.888, lon:-119.496 };
 
-function relTime(dateStr){
-  const d = new Date(dateStr);
-  if(isNaN(d)) return '';
-  const diffMs = Date.now() - d.getTime();
-  const mins = Math.round(diffMs / 60000);
-  if(mins < 1) return 'just now';
-  if(mins < 60) return mins + 'm ago';
-  const hrs = Math.round(mins/60);
-  if(hrs < 24) return hrs + 'h ago';
-  const days = Math.round(hrs/24);
-  return days + 'd ago';
-}
+/* Castanet is a Thompson-Okanagan-wide wire; it suffixes each headline
+   with its region. These are the ones that count as local here. */
+const LOCAL_REGIONS = ['kelowna','west kelowna','lake country','peachland','okanagan','vernon'];
 
-// Records what happened on the last load, per feed, so the page can explain itself.
 const feedStatus = {};
+let allItems = [];
+let localOnly = true;
+
+function stripHtml(s){ if(!s) return ''; const d=document.createElement('div'); d.innerHTML=s; return (d.textContent||'').trim(); }
+
+function relTime(v){
+  const d=new Date(v); if(isNaN(d)) return '';
+  const m=Math.round((Date.now()-d.getTime())/60000);
+  if(m<1) return 'just now';
+  if(m<60) return m+'m ago';
+  const h=Math.round(m/60); if(h<24) return h+'h ago';
+  return Math.round(h/24)+'d ago';
+}
 
 function parseXmlFeed(text){
-  const doc = new DOMParser().parseFromString(text, 'text/xml');
-  if(doc.getElementsByTagName('parsererror').length) throw new Error('response was not valid XML');
-  const isAtom = doc.documentElement.nodeName === 'feed';
-  const nodes = isAtom ? Array.from(doc.getElementsByTagName('entry')) : Array.from(doc.getElementsByTagName('item'));
-  if(!nodes.length) throw new Error('no items found in feed');
-  return nodes.map(n => {
-    const get = tag => { const el = n.getElementsByTagName(tag)[0]; return el ? el.textContent : ''; };
-    let link = get('link');
-    if(!link || !link.trim()){
-      const linkEl = n.getElementsByTagName('link')[0];
-      if(linkEl && linkEl.getAttribute) link = linkEl.getAttribute('href') || '';
-    }
-    return {
-      title: stripHtml(get('title')),
-      link: link.trim(),
-      pubDate: get('pubDate') || get('published') || get('updated') || get('date'),
-      description: stripHtml(get('summary') || get('description') || get('content'))
-    };
+  const doc=new DOMParser().parseFromString(text,'text/xml');
+  if(doc.getElementsByTagName('parsererror').length) throw new Error('not valid XML');
+  const atom=doc.documentElement.nodeName==='feed';
+  const nodes=Array.from(doc.getElementsByTagName(atom?'entry':'item'));
+  if(!nodes.length) throw new Error('no items in feed');
+  return nodes.map(n=>{
+    const g=t=>{const e=n.getElementsByTagName(t)[0];return e?e.textContent:'';};
+    let link=g('link').trim();
+    if(!link){ const le=n.getElementsByTagName('link')[0]; if(le&&le.getAttribute) link=le.getAttribute('href')||''; }
+    return { title:stripHtml(g('title')), link,
+             pubDate:g('pubDate')||g('published')||g('updated'),
+             description:stripHtml(g('description')||g('summary')) };
   });
 }
 
-// Each transport is tried in order until one returns usable items.
+/* Tried in order. rss2json is first because it handles odd charsets and
+   servers that reject plain proxies; the raw-XML proxies are the backstop. */
 const TRANSPORTS = [
-  {
-    name: 'rss2json',
-    run: async url => {
-      const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(url));
-      if(!r.ok) throw new Error('HTTP ' + r.status);
-      const j = await r.json();
-      if(j.status !== 'ok') throw new Error(j.message || 'status ' + j.status);
-      if(!j.items || !j.items.length) throw new Error('no items returned');
-      return j.items.map(it => ({
-        title: stripHtml(it.title),
-        link: it.link,
-        pubDate: it.pubDate,
-        description: stripHtml(it.description || it.content || '')
-      }));
-    }
-  },
-  {
-    name: 'allorigins',
-    run: async url => {
-      const r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
-      if(!r.ok) throw new Error('HTTP ' + r.status);
+  { name:'rss2json', run: async u=>{
+      const r=await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(u));
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const j=await r.json();
+      if(j.status!=='ok') throw new Error(j.message||'status '+j.status);
+      if(!j.items||!j.items.length) throw new Error('no items');
+      return j.items.map(i=>({title:stripHtml(i.title),link:i.link,pubDate:i.pubDate,description:stripHtml(i.description||i.content||'')}));
+  }},
+  { name:'allorigins', run: async u=>{
+      const r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(u));
+      if(!r.ok) throw new Error('HTTP '+r.status);
       return parseXmlFeed(await r.text());
-    }
-  },
-  {
-    name: 'corsproxy.io',
-    run: async url => {
-      const r = await fetch('https://corsproxy.io/?url=' + encodeURIComponent(url));
-      if(!r.ok) throw new Error('HTTP ' + r.status);
+  }},
+  { name:'codetabs', run: async u=>{
+      const r=await fetch('https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u));
+      if(!r.ok) throw new Error('HTTP '+r.status);
       return parseXmlFeed(await r.text());
-    }
-  },
-  {
-    name: 'direct',
-    run: async url => {
-      const r = await fetch(url);
-      if(!r.ok) throw new Error('HTTP ' + r.status);
+  }},
+  { name:'thingproxy', run: async u=>{
+      const r=await fetch('https://thingproxy.freeboard.io/fetch/'+u);
+      if(!r.ok) throw new Error('HTTP '+r.status);
       return parseXmlFeed(await r.text());
-    }
-  }
+  }},
+  { name:'direct', run: async u=>{
+      const r=await fetch(u);
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return parseXmlFeed(await r.text());
+  }}
 ];
 
-async function fetchFeed(url, key){
-  const attempts = [];
+async function fetchFeed(url,key){
+  const tried=[];
   for(const t of TRANSPORTS){
     try{
-      const items = await t.run(url);
-      feedStatus[key] = { ok:true, via:t.name, count:items.length, attempts };
+      const items=await t.run(url);
+      feedStatus[key]={ok:true,via:t.name,count:items.length};
       return items;
-    }catch(err){
-      attempts.push(t.name + ': ' + err.message);
-    }
+    }catch(e){ tried.push(t.name+': '+e.message); }
   }
-  feedStatus[key] = { ok:false, attempts };
+  feedStatus[key]={ok:false,tried};
   return [];
 }
 
-function renderRiver(items){
-  const el = document.getElementById('river');
-  const countEl = document.getElementById('riverCount');
+/* Open-Meteo sends CORS headers, so this needs no proxy at all. */
+const WX = {0:'Clear',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Rime fog',
+  51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',
+  66:'Freezing rain',67:'Freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',
+  80:'Showers',81:'Showers',82:'Heavy showers',85:'Snow showers',86:'Snow showers',
+  95:'Thunderstorm',96:'Thunderstorm with hail',99:'Severe thunderstorm'};
+
+async function loadWeather(){
+  const url='https://api.open-meteo.com/v1/forecast?latitude='+KELOWNA.lat+'&longitude='+KELOWNA.lon+
+    '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m'+
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'+
+    '&timezone=America%2FVancouver&forecast_days=5';
+  try{
+    const r=await fetch(url);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    feedStatus.weather={ok:true,via:'open-meteo',count:d.daily.time.length};
+
+    const c=d.current;
+    document.getElementById('condTemp').textContent=Math.round(c.temperature_2m)+'°C';
+    document.getElementById('condDesc').textContent=
+      (WX[c.weather_code]||'—')+' · feels like '+Math.round(c.apparent_temperature)+'°';
+    document.getElementById('condMeta').innerHTML=
+      'Wind '+Math.round(c.wind_speed_10m)+' km/h<br>Humidity '+c.relative_humidity_2m+'%';
+
+    const dl=d.daily;
+    document.getElementById('forecast').innerHTML=dl.time.map((t,i)=>{
+      const day=i===0?'Today':new Date(t+'T12:00:00').toLocaleDateString(undefined,{weekday:'short'});
+      const pop=dl.precipitation_probability_max[i];
+      return '<div class="fc-row"><span class="fc-day">'+day+'</span>'+
+        '<span class="fc-desc">'+(WX[dl.weather_code[i]]||'')+(pop>20?' · '+pop+'%':'')+'</span>'+
+        '<span class="fc-temp">'+Math.round(dl.temperature_2m_max[i])+'° <span class="lo">'+
+        Math.round(dl.temperature_2m_min[i])+'°</span></span></div>';
+    }).join('');
+  }catch(e){
+    feedStatus.weather={ok:false,tried:['open-meteo: '+e.message]};
+    document.getElementById('condDesc').textContent='Weather service unreachable.';
+    document.getElementById('forecast').innerHTML='<p class="empty-note">No forecast available.</p>';
+  }
+}
+
+function renderRiver(){
+  const el=document.getElementById('river');
+  const items=localOnly?allItems.filter(i=>i.isLocal):allItems;
+  document.getElementById('riverCount').textContent=items.length+' headlines';
   if(!items.length){
-    el.innerHTML = '<p class="empty-note">No headlines came through this time. Try refreshing in a moment.</p>';
-    countEl.textContent = '';
+    el.innerHTML='<p class="empty-note">Nothing to show. Try Everything, or refresh.</p>';
     return;
   }
-  countEl.textContent = items.length + ' headlines';
-  el.innerHTML = items.map(it => `
-    <a class="river-item" href="${it.link}" target="_blank" rel="noopener">
-      <div class="river-top">
-        <span class="pill ${it.pill}">${it.source}</span>
-        <span class="river-time">${relTime(it.pubDate)}</span>
-      </div>
-      <div class="river-title">${it.title}</div>
-    </a>
-  `).join('');
+  el.innerHTML=items.slice(0,40).map(i=>
+    '<a class="river-item" href="'+i.link+'" target="_blank" rel="noopener">'+
+      '<div class="river-top"><span class="pill '+i.pill+'">'+i.source+'</span>'+
+      (i.region?'<span class="region">'+i.region+'</span>':'')+
+      '<span class="river-time">'+relTime(i.pubDate)+'</span></div>'+
+      '<div class="river-title">'+i.title+'</div></a>').join('');
 }
 
 function renderCivic(items){
-  const el = document.getElementById('civic');
-  if(!items.length){
-    el.innerHTML = '<p class="empty-note">No news releases posted recently.</p>';
-    return;
-  }
-  el.innerHTML = items.slice(0,8).map(it => `
-    <a class="civic-item" href="${it.link}" target="_blank" rel="noopener">
-      <span class="river-time">${relTime(it.pubDate)}</span>
-      ${it.title}
-    </a>
-  `).join('');
+  const el=document.getElementById('civic');
+  if(!items.length){ el.innerHTML='<p class="empty-note">No releases retrieved.</p>'; return; }
+  el.innerHTML=items.slice(0,8).map(i=>
+    '<a class="civic-item" href="'+i.link+'" target="_blank" rel="noopener">'+
+    '<span class="river-time">'+relTime(i.pubDate)+'</span>'+i.title+'</a>').join('');
 }
 
-function renderWeather(items){
-  const tempEl = document.getElementById('condTemp');
-  const descEl = document.getElementById('condDesc');
-  const card = document.getElementById('condCard');
-  const forecastEl = document.getElementById('forecast');
-
-  if(!items.length){
-    tempEl.textContent = '—';
-    descEl.textContent = 'Weather feed unavailable right now.';
-    forecastEl.innerHTML = '<p class="empty-note">No forecast data.</p>';
-    return;
-  }
-
-  // Environment Canada's atom feed: first entry is usually "Current Conditions",
-  // followed by forecast periods, then any active warnings.
-  const current = items.find(it => /current conditions/i.test(it.title)) || items[0];
-  const tempMatch = current.title.match(/(-?\d+(\.\d+)?)\s*°?C/i) || current.description.match(/(-?\d+(\.\d+)?)\s*°?C/i);
-  tempEl.textContent = tempMatch ? tempMatch[1] + '°C' : '—';
-  descEl.textContent = current.description.split('.').slice(0,2).join('.').trim() || current.title;
-
-  const warning = items.find(it => /warning|watch|advisory/i.test(it.title));
-  const existingAlert = card.querySelector('.alert-pill');
-  if(existingAlert) existingAlert.remove();
-  if(warning){
-    const pill = document.createElement('div');
-    pill.className = 'alert-pill';
-    pill.textContent = warning.title;
-    card.appendChild(pill);
-  }
-
-  const forecastPeriods = items.filter(it =>
-    !/current conditions/i.test(it.title) &&
-    !/warning|watch|advisory/i.test(it.title)
-  ).slice(0, 6);
-
-  if(!forecastPeriods.length){
-    forecastEl.innerHTML = '<p class="empty-note">No period-by-period forecast available.</p>';
-  }else{
-    forecastEl.innerHTML = forecastPeriods.map(it => {
-      const parts = it.title.split(':');
-      const period = parts.length > 1 ? parts[0] : '';
-      const text = parts.length > 1 ? parts.slice(1).join(':').trim() : it.title;
-      return `
-        <div class="forecast-row">
-          <span class="forecast-period">${period}</span>
-          <span class="forecast-text">${text}</span>
-        </div>
-      `;
-    }).join('');
-  }
-}
-
-const FEED_LABELS = {
-  castanet:'Castanet', kelownanow:'KelownaNow', globalnews:'Global News Okanagan',
-  civic:'City of Kelowna', weather:'Environment Canada'
-};
-
+const DIAG_LABELS={castanet:'Castanet',kelownanow:'KelownaNow',globalnews:'Global News Okanagan',civic:'City of Kelowna',weather:'Open-Meteo'};
 function renderDiagnostics(){
-  const el = document.getElementById('diagnostics');
-  const rows = Object.keys(FEED_LABELS).map(key => {
-    const s = feedStatus[key];
-    if(!s) return '';
-    const dot = s.ok ? '<span class="dot ok"></span>' : '<span class="dot bad"></span>';
-    const detail = s.ok
-      ? `${s.count} items via ${s.via}`
-      : s.attempts.join(' · ');
-    return `<div class="diag-row">${dot}<span class="diag-name">${FEED_LABELS[key]}</span><span class="diag-detail">${detail}</span></div>`;
+  document.getElementById('diagnostics').innerHTML=Object.keys(DIAG_LABELS).map(k=>{
+    const s=feedStatus[k]; if(!s) return '';
+    const detail=s.ok?(s.count+' items via '+s.via):s.tried.join(' · ');
+    return '<div class="diag-row"><span class="dot '+(s.ok?'ok':'bad')+'"></span>'+
+      '<span class="diag-name">'+DIAG_LABELS[k]+'</span>'+
+      '<span class="diag-detail">'+detail+'</span></div>';
   }).join('');
-
-  const allFailed = Object.values(feedStatus).every(s => !s.ok);
-  const hint = allFailed
-    ? `<p class="diag-hint">Every route failed, which usually means the page itself is blocked from making outside requests — not that the feeds are down. Save this file and open it directly in Chrome or Firefox, or serve it from your own domain, and the proxies will work.</p>`
-    : '';
-
-  el.innerHTML = rows + hint;
 }
 
 async function loadAll(){
-  document.getElementById('refreshBtn').textContent = 'Loading…';
-  document.getElementById('refreshBtn').disabled = true;
+  const btn=document.getElementById('refreshBtn');
+  btn.textContent='Loading…'; btn.disabled=true;
 
-  const results = await Promise.allSettled([
-    fetchFeed(FEEDS.castanet.url, 'castanet'),
-    fetchFeed(FEEDS.kelownanow.url, 'kelownanow'),
-    fetchFeed(FEEDS.globalnews.url, 'globalnews'),
-    fetchFeed(FEEDS.civic.url, 'civic'),
-    fetchFeed(FEEDS.weather.url, 'weather')
-  ]);
+  const newsResults=await Promise.all(FEEDS.map(f=>fetchFeed(f.url,f.key)));
+  const civicItems=await fetchFeed(CIVIC.url,CIVIC.key);
+  await loadWeather();
 
-  const [castanet, kelownanow, globalnews, civic, weather] = results.map(r => r.status === 'fulfilled' ? r.value : []);
+  allItems=[];
+  newsResults.forEach((items,idx)=>{
+    const f=FEEDS[idx];
+    items.forEach(i=>{
+      // Castanet tags its region in a trailing parenthetical; pull it out.
+      const m=i.title.match(/\s*\(([^()]{2,30})\)\s*$/);
+      const region=m?m[1]:null;
+      const title=m?i.title.slice(0,m.index).trim():i.title;
+      const hay=((region||'')+' '+title).toLowerCase();
+      allItems.push({
+        ...i, title, region,
+        source:f.label, pill:f.pill,
+        // Feeds that are already local-only always count as local.
+        isLocal: f.key!=='castanet' || LOCAL_REGIONS.some(r=>hay.includes(r))
+      });
+    });
+  });
+  allItems.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
 
-  let river = [];
-  river = river.concat(castanet.map(it => ({...it, source: FEEDS.castanet.label, pill: FEEDS.castanet.pill})));
-  river = river.concat(kelownanow.map(it => ({...it, source: FEEDS.kelownanow.label, pill: FEEDS.kelownanow.pill})));
-  river = river.concat(globalnews.map(it => ({...it, source: FEEDS.globalnews.label, pill: FEEDS.globalnews.pill})));
-  river.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
-  renderRiver(river.slice(0, 30));
-
-  civic.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
-  renderCivic(civic);
-
-  renderWeather(weather);
-
+  renderRiver();
+  civicItems.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+  renderCivic(civicItems);
   renderDiagnostics();
 
-  const failed = Object.values(feedStatus).filter(s => !s.ok).length;
-  const now = new Date();
-  document.getElementById('lastUpdated').textContent =
-    'Updated ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) +
-    (failed ? ` · ${failed} of 5 feeds unreachable` : ' · all 5 feeds live');
+  const bad=Object.values(feedStatus).filter(s=>!s.ok).length;
+  document.getElementById('lastUpdated').textContent=
+    'Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+
+    (bad?' · '+bad+' of 5 unreachable':' · all sources live');
 
-  document.getElementById('refreshBtn').textContent = 'Refresh';
-  document.getElementById('refreshBtn').disabled = false;
+  btn.textContent='Refresh'; btn.disabled=false;
+}
+
+function setFilter(local){
+  localOnly=local;
+  document.getElementById('fLocal').setAttribute('aria-pressed',String(local));
+  document.getElementById('fAll').setAttribute('aria-pressed',String(!local));
+  renderRiver();
 }
 
 function updateDateline(){
-  document.getElementById('dateline').textContent = new Date().toLocaleDateString(undefined, {
-    weekday:'long', year:'numeric', month:'long', day:'numeric'
-  });
+  document.getElementById('dateline').textContent=
+    new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 }
 
+document.getElementById('fLocal').addEventListener('click',()=>setFilter(true));
+document.getElementById('fAll').addEventListener('click',()=>setFilter(false));
+document.getElementById('refreshBtn').addEventListener('click',loadAll);
 updateDateline();
 loadAll();
-document.getElementById('refreshBtn').addEventListener('click', loadAll);
-setInterval(loadAll, 30 * 60 * 1000);
-setInterval(updateDateline, 60 * 1000);
+setInterval(loadAll,30*60*1000);
+setInterval(updateDateline,60*1000);
 </script>
-
 </body>
 </html>
