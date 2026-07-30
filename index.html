@@ -19,7 +19,8 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
   a{color:inherit}
 
   .masthead{padding:2.4rem 1.5rem 0;max-width:1180px;margin:0 auto}
@@ -43,7 +44,6 @@
   .cond-meta{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--slate);text-align:right;line-height:1.6}
 
   .layout{max-width:1180px;margin:1.6rem auto 3rem;padding:0 1.5rem;display:grid;grid-template-columns:1.7fr 1fr;gap:1.6rem}
-  @media (max-width:860px){.layout{grid-template-columns:1fr}}
 
   .panel-title{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:1.15rem;margin:0 0 .9rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
   .panel-title .count{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--slate);font-weight:400}
@@ -53,7 +53,11 @@
   .filter-btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 
   .river-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.95rem 1.1rem;margin-bottom:.7rem;display:block;text-decoration:none;transition:border-color .15s,transform .15s}
-  .river-item:hover{border-color:var(--teal);transform:translateX(2px)}
+  @media (hover:hover){
+    .river-item:hover{border-color:var(--teal);transform:translateX(2px)}
+    button.refresh:hover{background:var(--teal)}
+  }
+  .river-item:active{border-color:var(--teal);background:#FBFDFC}
   .river-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;flex-wrap:wrap}
   .pill{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:.18rem .5rem;border-radius:5px;font-weight:500}
   .pill.castanet{background:var(--teal-soft);color:var(--teal)}
@@ -65,14 +69,6 @@
   .river-title{font-size:.98rem;line-height:1.35;font-weight:500}
 
   .side-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1.2rem}
-
-  .civic-item{display:block;padding:.6rem 0;border-bottom:1px solid var(--mist);text-decoration:none;font-size:.88rem;line-height:1.35}
-  .civic-item:last-child{border-bottom:none}
-  .civic-head{display:flex;align-items:center;gap:.45rem;margin-bottom:.2rem}
-  .tag{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;padding:.12rem .4rem;border-radius:4px;background:var(--mist);color:var(--slate)}
-  .tag.news{background:var(--teal-soft);color:var(--teal)}
-  .tag.projects{background:var(--gold-soft);color:var(--gold)}
-  .tag.events{background:var(--sage-soft);color:var(--sage)}
 
   .fc-row{display:flex;justify-content:space-between;align-items:baseline;gap:.8rem;padding:.5rem 0;border-bottom:1px solid var(--mist);font-size:.86rem}
   .fc-row:last-child{border-bottom:none}
@@ -99,6 +95,45 @@
   .dot.bad{background:var(--plum)}
   .diag-name{font-size:.85rem;font-weight:500}
   .diag-detail{grid-column:2;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--slate);line-height:1.45;word-break:break-word}
+
+  /* ---------- Responsive ----------
+     Three steps: the sidebar drops below the river, then the page tightens
+     for phones, then the masthead stacks on the narrowest screens. */
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;gap:1.2rem}
+    /* Sidebar panels pair up in the width they just reclaimed. */
+    aside{display:grid;grid-template-columns:1fr 1fr;gap:0 1.2rem;align-items:start}
+    .refresh-row{grid-column:1/-1}
+  }
+
+  @media (max-width:640px){
+    aside{grid-template-columns:1fr}
+    .masthead{padding:1.7rem 1rem 0}
+    .conditions{padding:0 1rem}
+    .layout{padding:0 1rem;margin:1.2rem auto;gap:1rem}
+    .side-panel{padding:1rem 1.05rem;margin-bottom:1rem}
+    .cond-card{padding:.9rem 1rem;gap:.45rem 1rem}
+    .cond-desc{width:100%}
+    /* Wind and humidity read better as a row than a right-aligned stack. */
+    .cond-meta{margin-left:0;width:100%;text-align:left;display:flex;gap:1.1rem}
+    .cond-meta br{display:none}
+    .river-item{padding:.85rem .95rem}
+    .river-title{font-size:1rem}
+    .panel-title{font-size:1.08rem}
+    /* Comfortable thumb targets. */
+    .filter-btn,button.refresh{min-height:44px;padding:.5rem .95rem}
+    .refresh-row{padding-bottom:.5rem}
+  }
+
+  @media (max-width:420px){
+    .masthead-row{flex-direction:column;align-items:flex-start;gap:.2rem}
+    .dateline{text-align:left;font-size:.7rem}
+    .waterline{margin-top:.85rem}
+    .cond-temp{font-size:1.85rem}
+    .river-top{gap:.35rem}
+    .filter-bar{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+  }
 </style>
 </head>
 <body>
@@ -142,11 +177,6 @@
 
   <aside>
     <div class="side-panel">
-      <h2 class="panel-title">City Hall</h2>
-      <div id="civic"><div class="skeleton" style="width:95%"></div><div class="skeleton" style="width:80%"></div></div>
-    </div>
-
-    <div class="side-panel">
       <h2 class="panel-title">Five days</h2>
       <div id="forecast"><div class="skeleton" style="width:90%"></div><div class="skeleton" style="width:75%"></div></div>
     </div>
@@ -173,13 +203,6 @@ const FEEDS = [
   { key:'kelownanow', label:'KelownaNow',          pill:'kelownanow', url:'https://www.kelownanow.com/api/rss/128' },
   { key:'globalnews', label:'Global News Okanagan',pill:'globalnews', url:'https://globalnews.ca/okanagan/feed/' },
   { key:'capnews',    label:'Capital News',        pill:'capnews',    url:'https://kelownacapnews.com/feed' }
-];
-
-/* City of Kelowna publishes one feed per topic; they share a sidebar panel. */
-const CIVIC_FEEDS = [
-  { key:'civicNews',     tag:'News',     url:'https://www.kelowna.ca/rss/news.xml' },
-  { key:'civicProjects', tag:'Projects', url:'https://www.kelowna.ca/rss/cityprojects.xml' },
-  { key:'civicEvents',   tag:'Events',   url:'https://www.kelowna.ca/rss/events.xml' }
 ];
 const KELOWNA = { lat:49.888, lon:-119.496 };
 
@@ -321,47 +344,7 @@ function renderRiver(){
       '<div class="river-title">'+i.title+'</div></a>').join('');
 }
 
-async function loadCivic(){
-  /* Preferred path: the snapshot committed by the GitHub Action.
-     It's same-origin, so there's no CORS and no proxy involved — which is
-     the whole point, since kelowna.ca's WAF rejects the public proxies. */
-  try{
-    const r=await fetch('data/civic.json?t='+Date.now(),{cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const d=await r.json();
-    if(!Array.isArray(d.items)||!d.items.length) throw new Error('snapshot empty');
-    const built=relTime(d.generated);
-    CIVIC_FEEDS.forEach(f=>{
-      const st=(d.sources||{})[f.tag]||{};
-      feedStatus[f.key]= st.ok
-        ? {ok:true,via:'snapshot, built '+built,count:st.count}
-        : (st.stale
-            ? {ok:true,via:'snapshot (stale), built '+built,count:st.count}
-            : {ok:false,tried:['snapshot: '+(st.error||'no data')]});
-    });
-    return d.items;
-  }catch(e){
-    console.info('Civic snapshot unavailable ('+e.message+'); trying feeds live.');
-  }
-  /* Fallback: hit kelowna.ca through the proxy chain. Works when the page is
-     opened as a local file, or before the Action has run for the first time. */
-  const res=await Promise.all(CIVIC_FEEDS.map(f=>fetchFeed(f.url,f.key)));
-  const out=[];
-  res.forEach((items,i)=>items.forEach(it=>out.push({...it,tag:CIVIC_FEEDS[i].tag})));
-  return out;
-}
-
-function renderCivic(items){
-  const el=document.getElementById('civic');
-  if(!items.length){ el.innerHTML='<p class="empty-note">City feeds did not respond.</p>'; return; }
-  el.innerHTML=items.slice(0,10).map(i=>
-    '<a class="civic-item" href="'+i.link+'" target="_blank" rel="noopener">'+
-      '<div class="civic-head"><span class="tag '+i.tag.toLowerCase()+'">'+i.tag+'</span>'+
-      '<span class="river-time">'+relTime(i.pubDate)+'</span></div>'+i.title+'</a>').join('');
-}
-
-const DIAG_LABELS={castanet:'Castanet',kelownanow:'KelownaNow',globalnews:'Global News Okanagan',
-  capnews:'Capital News',civicNews:'City · News',civicProjects:'City · Projects',civicEvents:'City · Events',weather:'Open-Meteo'};
+const DIAG_LABELS={castanet:'Castanet',kelownanow:'KelownaNow',globalnews:'Global News Okanagan',capnews:'Capital News',weather:'Open-Meteo'};
 function renderDiagnostics(){
   document.getElementById('diagnostics').innerHTML=Object.keys(DIAG_LABELS).map(k=>{
     const s=feedStatus[k]; if(!s) return '';
@@ -377,7 +360,6 @@ async function loadAll(){
   btn.textContent='Loading…'; btn.disabled=true;
 
   const newsResults=await Promise.all(FEEDS.map(f=>fetchFeed(f.url,f.key)));
-  const civicItems=await loadCivic();
   await loadWeather();
 
   allItems=[];
@@ -401,15 +383,12 @@ async function loadAll(){
 
   renderRiver();
 
-  civicItems.sort((a,b)=>(Date.parse(b.pubDate)||0)-(Date.parse(a.pubDate)||0));
-  renderCivic(civicItems);
-
   renderDiagnostics();
 
   const bad=Object.values(feedStatus).filter(s=>!s.ok).length;
   document.getElementById('lastUpdated').textContent=
     'Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+
-    (bad?' · '+bad+' of 8 unreachable':' · all sources live');
+    (bad?' · '+bad+' of 5 unreachable':' · all sources live');
 
   btn.textContent='Refresh'; btn.disabled=false;
 }
